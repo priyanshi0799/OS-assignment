@@ -1,39 +1,125 @@
 #include<stdio.h>
-#include<conio.h>
-#include<pthread.h>
-
+#include <stdbool.h>
 int main()
 {
 	int allocated[5][4]={{0,0,1,2},		 
-			     {1,0,0,0},
-			     {1,3,5,4},
-		 	     {0,6,3,2},
-			     {0,0,1,4}};
+			     		 {1,0,0,0},
+			     		 {1,3,5,4},
+		 	     		 {0,6,3,2},
+			       		 {0,0,1,4}};
 	
 	int max[5][4]={{0,0,1,2},
-		       {1,7,5,0},
-		       {2,3,5,6},
-		       {0,6,5,2},
-		       {0,6,5,6}};
+		       	   {1,7,5,0},
+		       	   {2,3,5,6},
+		           {0,6,5,2},
+		           {0,6,5,6}};
 	
 	int avail[4]={1,5,2,0};
 	
+	int process[5];
+	
+	int alloc[4]={0,0,0,0};
+	
+	int i, j, flag;
+    int count = 0;
+    bool safe=false;
+
 	int need[5][4];
 	
-	int i,j;
-	
+	printf("Allocated Resources A B C B are:\n");
 	for(i=0;i<5;i++)
 	{
-		printf("Need of %d process is ",i);
 		for(j=0;j<4;j++)
 		{
-			need[i][j]=max[i][j]-allocated[i][j];
-			printf("%d",need[i][j]);
+			printf("%d ",allocated[i][j]);
 		}
 		printf("\n");
 	}
 	
+	printf("\n");
 	
-	getch();
+	printf("Maximum Resources for A B C B are:\n");
+	for(i=0;i<5;i++)
+	{
+		for(j=0;j<4;j++)
+		{
+			printf("%d ",max[i][j]);
+		}
+		printf("\n");
+	}
+	for (i=0;i<5;i++) 
+	{
+        process[i] = 1;
+        count++;
+    }
 	
+	int max_res={3,14,12,12};
+	
+	for (i=0;i<5;i++)
+	{
+	   for (j=0;j<4;j++)
+	   {
+	       alloc[j] += allocated[i][j];
+	   }
+	}
+	
+	printf("\nTotal Allocated resources: \n");
+    for (i=0;i<4;i++)
+        printf("%d ", alloc[i]);
+        
+    printf("\n"); 
+    
+	printf("\nNeed of Processes is \n");   
+	for(i=0;i<5;i++)
+	{
+		for(j=0;j<4;j++)
+		{
+			need[i][j]=max[i][j]-allocated[i][j];
+			printf("%d ",need[i][j]);
+		}
+		printf("\n");
+	}
+	
+	 while (count!= 0) 
+	 {
+        safe=false;
+        for (i=0;i<5;i++) 
+		{
+            if (process[i]) 
+			{
+                flag=1;
+                for (j=0;j<4;j++) 
+				{
+                    if (need[i][j] > avail[j]) 
+					{
+                        flag= 0;
+                        break;
+                    }
+                }
+ 
+                if (flag) 
+				{
+                    printf("\nProcess%d is executing....\n", i);
+                    process[i] = 0;
+                    count--;
+                    safe=true;
+                    for (j=0;j<4;j++)
+                        avail[j] +=allocated[i][j];
+                    break;
+                }
+            }
+        }
+ 
+        if (!safe) {
+            printf("\nThe processes are in unsafe state.");
+            break;
+        }
+ 
+        if (safe)
+            printf("\nThe process is in safe state.");
+ 
+        printf("\nAvailable resources: ");
+        for (i = 0; i < 4; i++)
+            printf("%d ", avail[i]);
+    }
 }
