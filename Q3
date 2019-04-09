@@ -39,5 +39,4 @@ int main()
 	pthread_join(th2,NULL);
 	
 	getch();
-	
 }
